@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CycleSync - Period Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <!-- Using a simple icon library for UI elements -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+</head>
+<body>
+
+    <div id="app">
+        <!-- ONBOARDING / PROFILE SWITCHER -->
+        <section id="view-onboarding" class="screen active">
+            <div class="glass-card welcome-card">
+                <h1>Welcome to CycleSync</h1>
+                <p>Track your health with privacy.</p>
+                
+                <div id="profile-list" class="profile-list">
+                    <!-- Profiles injected here -->
+                </div>
+
+                <button id="btn-create-profile" class="btn btn-secondary">
+                    <span class="material-icons-round">add</span> New Profile
+                </button>
+            </div>
+        </section>
+
+        <!-- MAIN APP CONTAINER (Hidden on onboarding) -->
+        <main id="main-app" class="hidden">
+            
+            <!-- Header -->
+            <header class="app-header">
+                <div class="user-info">
+                    <span class="material-icons-round">face</span>
+                    <span id="header-username">User</span>
+                </div>
+                <div class="header-actions">
+                     <a href="#settings" class="btn-icon" title="Settings">
+                        <span class="material-icons-round">settings</span>
+                    </a>
+                    <button id="btn-manage-profiles" class="btn-icon" title="Manage Profiles">
+                        <span class="material-icons-round">manage_accounts</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- VIEW: DASHBOARD (HOME HUB) -->
+            <section id="view-dashboard" class="view">
+                
+                <!-- Home Header -->
+                <div class="home-header">
+                    <h1 id="greeting-text">Hello, User</h1>
+                    <div class="affirmation-widget">
+                        <span class="affirmation-icon">✨</span>
+                        <p id="affirmation-text">Loading positive vibes...</p>
+                    </div>
+                </div>
+
+                <!-- Cycle Circle -->
+                <div class="cycle-display-container">
+                    <div class="cycle-circle-outer">
+                        <div class="cycle-circle" id="cycle-circle-gradient">
+                            <div class="cycle-circle-inner">
+                                <div class="cycle-info">
+                                    <h2 id="cycle-day-count">Day 1</h2>
+                                    <p id="cycle-phase-text">Follicular Phase</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prediction / Status Badge -->
+                <div id="cycle-status-badge" class="status-badge hidden">
+                    <!-- e.g. "On Time" -->
+                </div>
+
+                <!-- Main Action Button -->
+                <div class="action-area">
+                    <button id="btn-log-period" class="btn btn-large btn-primary shadow-lg">
+                        Log Period Start
+                    </button>
+                    <p class="prediction-text" id="prediction-text">Next period predicted in 14 days.</p>
+                </div>
+                
+                <!-- Dashboard Grid -->
+                <div class="dashboard-grid">
+                    
+                    <!-- Partner Connect -->
+                    <div class="glass-card partner-card">
+                        <div class="card-content">
+                            <h3>Partner Connect</h3>
+                            <p>Let them know how you're feeling today.</p>
+                        </div>
+                        <button id="btn-partner-share" class="btn-icon-circle" title="Share Status">
+                            <span class="material-icons-round">ios_share</span>
+                        </button>
+                    </div>
+
+                    <!-- Quick Actions -->
+                     <div class="quick-actions-row">
+                        <a href="#log" class="quick-action-btn">
+                            <div class="qa-icon" style="background: #E0F7FA; color: #006064"><span class="material-icons-round">edit_note</span></div>
+                            <span>Log</span>
+                        </a>
+                        <button id="btn-start-breathe" class="quick-action-btn">
+                            <div class="qa-icon" style="background: #F3E5F5; color: #4A148C"><span class="material-icons-round">self_improvement</span></div>
+                            <span>Breathe</span>
+                        </button>
+                        <a href="#learn" class="quick-action-btn">
+                            <div class="qa-icon" style="background: #FFF3E0; color: #E65100"><span class="material-icons-round">lightbulb</span></div>
+                            <span>Tips</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Retroactive Log -->
+                <div class="retroactive-log">
+                    <button id="btn-retroactive" class="btn btn-text btn-small">
+                        Forgot to log? Add past dates
+                    </button>
+                </div>
+            </section>
+
+            <!-- VIEW: CALENDAR -->
+            <section id="view-calendar" class="view">
+                <div class="glass-card calendar-card">
+                    <div class="calendar-header">
+                        <button id="btn-prev-month" class="btn-icon"><span class="material-icons-round">chevron_left</span></button>
+                        <h3 id="calendar-month-year">January 2026</h3>
+                        <button id="btn-next-month" class="btn-icon"><span class="material-icons-round">chevron_right</span></button>
+                    </div>
+                    <div class="calendar-grid-header">
+                        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                    </div>
+                    <div id="calendar-grid" class="calendar-grid">
+                        <!-- Days injected via JS -->
+                    </div>
+                    <div class="calendar-legend">
+                        <div class="legend-item"><span class="dot dot-period"></span> Period</div>
+                        <div class="legend-item"><span class="dot dot-fertile"></span> Fertile</div>
+                        <div class="legend-item"><span class="dot dot-log"></span> Log</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: ANALYTICS -->
+            <section id="view-analytics" class="view">
+                <div class="glass-card analytics-card">
+                    <h3>Cycle History</h3>
+                    <div id="history-list" class="history-list">
+                        <!-- History items -->
+                    </div>
+                </div>
+
+                <div class="glass-card analytics-card">
+                    <h3>Cycle Trends (Last 6 Months)</h3>
+                    <div class="chart-container" id="trend-chart">
+                        <!-- Simple CSS Bar chart -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- VIEW: HEALTH LIBRARY -->
+            <section id="view-learn" class="view">
+                <div class="learn-hero">
+                    <h2>Cycle Phases</h2>
+                    <p>Understanding your body's rhythm.</p>
+                </div>
+                
+                <div class="learn-grid">
+                    <!-- Menstrual Phase -->
+                    <div class="glass-card learn-card">
+                        <div class="learn-header header-menstrual">
+                            <span class="learn-icon">🩸</span>
+                            <div>
+                                <h3>Menstrual Phase</h3>
+                                <small>Days 1-5 • Winter Season</small>
+                            </div>
+                        </div>
+                        <div class="learn-content">
+                            <h4>What's Happening?</h4>
+                            <p>Estrogen and progesterone levels drop. Your uterus sheds its lining. Energy levels are typically at their lowest.</p>
+                            
+                            <div class="learn-tips">
+                                <h5>✨ Care Tips</h5>
+                                <ul>
+                                    <li>Rest and prioritize sleep.</li>
+                                    <li>Gentle stretching or yoga.</li>
+                                    <li>Eat iron-rich foods & warm soups.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Follicular Phase -->
+                    <div class="glass-card learn-card">
+                        <div class="learn-header header-follicular">
+                            <span class="learn-icon">🌱</span>
+                            <div>
+                                <h3>Follicular Phase</h3>
+                                <small>Days 6-13 • Spring Season</small>
+                            </div>
+                        </div>
+                        <div class="learn-content">
+                            <h4>What's Happening?</h4>
+                            <p>Estrogen rises as an egg prepares to be released. Energy and creativity start to spike. Your skin clears up.</p>
+                            
+                            <div class="learn-tips">
+                                <h5>✨ Care Tips</h5>
+                                <ul>
+                                    <li>Start new projects!</li>
+                                    <li>High-intensity cardio or HIIT.</li>
+                                    <li>Eat fermented foods & lean protein.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ovulation Phase -->
+                    <div class="glass-card learn-card">
+                        <div class="learn-header header-ovulation">
+                            <span class="learn-icon">🥚</span>
+                            <div>
+                                <h3>Ovulation Phase</h3>
+                                <small>Day 14 • Summer Season</small>
+                            </div>
+                        </div>
+                        <div class="learn-content">
+                            <h4>What's Happening?</h4>
+                            <p>Estrogen peaks and the egg is released. You are most fertile now. Confidence and libido are at their highest.</p>
+                            
+                            <div class="learn-tips">
+                                <h5>✨ Care Tips</h5>
+                                <ul>
+                                    <li>Socialize and network.</li>
+                                    <li>Strength training is great now.</li>
+                                    <li>Eat fresh veggies & antioxidants.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Luteal Phase -->
+                    <div class="glass-card learn-card">
+                        <div class="learn-header header-luteal">
+                            <span class="learn-icon">🍂</span>
+                            <div>
+                                <h3>Luteal Phase</h3>
+                                <small>Days 15-28 • Autumn Season</small>
+                            </div>
+                        </div>
+                        <div class="learn-content">
+                            <h4>What's Happening?</h4>
+                            <p>Progesterone rises to maintain the uterine lining. If no pregnancy, hormones drop at the end (PMS). You might feel bloated or moody.</p>
+                            
+                            <div class="learn-tips">
+                                <h5>✨ Care Tips</h5>
+                                <ul>
+                                    <li>Organize and wrap up tasks.</li>
+                                    <li>Magnesium for cramps.</li>
+                                    <li>Comfort foods (complex carbs).</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- VIEW: SETTINGS -->
+            <section id="view-settings" class="view">
+                <div class="glass-card settings-card">
+                    <h2>Settings</h2>
+                    
+                    <div class="settings-group">
+                        <h3>Data & Privacy</h3>
+                        <button id="btn-export-data" class="settings-item">
+                            <span class="material-icons-round">download</span>
+                            <span>Backup Data (Export JSON)</span>
+                        </button>
+                        <label class="settings-item" for="file-import">
+                            <span class="material-icons-round">upload</span>
+                            <span>Restore Data (Import JSON)</span>
+                            <input type="file" id="file-import" accept=".json" class="hidden">
+                        </label>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3>Notifications</h3>
+                        <button id="btn-enable-notifs" class="settings-item">
+                            <span class="material-icons-round">notifications</span>
+                            <span>Enable Period Alerts</span>
+                        </button>
+                    </div>
+                    
+                    <div class="settings-group">
+                        <h3>App Info</h3>
+                        <div class="settings-info">
+                            <p>CycleSync v1.1.0</p>
+                            <p>Secure, Local Storage Only.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- VIEW: DAILY LOG (Full Screen Overlay Style) -->
+            <section id="view-log" class="view">
+                <div class="glass-card log-card">
+                    <div class="log-header">
+                        <h2>Daily Log</h2>
+                        <h4 id="log-date-display">Today</h4>
+                    </div>
+                    
+                    <!-- Toggle Switch -->
+                    <div class="log-view-toggle">
+                        <button id="btn-show-log-form" class="toggle-btn active">Log Today</button>
+                        <button id="btn-show-log-history" class="toggle-btn">History</button>
+                    </div>
+
+                    <!-- FORM CONTAINER -->
+                    <div id="log-form-container">
+                        <div class="log-section">
+                            <label>Mood</label>
+                            <div class="mood-selector" id="mood-selector">
+                                <button data-mood="happy">😊</button>
+                                <button data-mood="calm">😌</button>
+                                <button data-mood="sad">😢</button>
+                                <button data-mood="tired">😴</button>
+                                <button data-mood="angry">😡</button>
+                            </div>
+                        </div>
+
+                        <div class="log-section">
+                            <label>Flow Intensity</label>
+                            <div class="flow-selector" id="flow-selector">
+                                <button data-flow="low" class="flow-btn">Low</button>
+                                <button data-flow="medium" class="flow-btn">Medium</button>
+                                <button data-flow="high" class="flow-btn">High</button>
+                            </div>
+                        </div>
+                        
+                        <div class="log-section">
+                            <label>Symptoms</label>
+                            <div class="symptom-tags" id="symptom-tags">
+                                <button class="tag" data-symptom="cramps">Cramps</button>
+                                <button class="tag" data-symptom="headache">Headache</button>
+                                <button class="tag" data-symptom="bloating">Bloating</button>
+                                <button class="tag" data-symptom="acne">Acne</button>
+                                <button class="tag" data-symptom="backache">Backache</button>
+                                <button class="tag" data-symptom="nausea">Nausea</button>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <a href="#dashboard" class="btn btn-text">Cancel</a>
+                            <button id="btn-save-log" class="btn btn-primary">Save Log</button>
+                        </div>
+                    </div>
+
+                    <!-- HISTORY CONTAINER (Hidden by default) -->
+                    <div id="log-history-container" class="hidden">
+                        <div id="log-history-list" class="log-history-list">
+                            <!-- Injected via JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bottom Navigation -->
+            <nav class="bottom-nav">
+                <a href="#dashboard" class="nav-item">
+                    <span class="material-icons-round">water_drop</span>
+                    <span>Cycle</span>
+                </a>
+                <a href="#calendar" class="nav-item">
+                    <span class="material-icons-round">calendar_today</span>
+                    <span>Calendar</span>
+                </a>
+                <a href="#analytics" class="nav-item">
+                    <span class="material-icons-round">insights</span>
+                    <span>Insights</span>
+                </a>
+                 <a href="#learn" class="nav-item">
+                    <span class="material-icons-round">school</span>
+                    <span>Learn</span>
+                </a>
+            </nav>
+
+        </main>
+    </div>
+
+    <!-- MODALS -->
+
+    <!-- New Profile Form Modal -->
+    <div id="new-profile-modal" class="modal-overlay hidden">
+        <div class="glass-card modal-box">
+            <h2>Create Profile</h2>
+            <div class="input-group">
+                <label>Your Name</label>
+                <input type="text" id="input-name" placeholder="e.g. Sarah">
+            </div>
+            <div class="input-group date-input-wrapper">
+                <label>Last Period Start Date</label>
+                <input type="date" id="input-last-date">
+            </div>
+            <div class="form-actions">
+                <button id="btn-cancel-create" class="btn btn-text">Cancel</button>
+                <button id="btn-save-profile" class="btn btn-primary">Start Tracking</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Manager Modal -->
+    <div id="profile-manager-modal" class="modal-overlay hidden">
+        <div class="glass-card modal-box">
+            <div class="modal-header">
+                <h3>Manage Profiles</h3>
+                <button id="btn-close-manager" class="btn-icon"><span class="material-icons-round">close</span></button>
+            </div>
+            
+            <div id="manager-profile-list" class="profile-list">
+                <!-- List injected via JS -->
+            </div>
+
+            <div class="modal-actions-center">
+                <button id="btn-manager-add" class="btn btn-secondary btn-small">
+                    <span class="material-icons-round">add</span> Add New
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div id="confirm-modal" class="modal-overlay hidden">
+        <div class="glass-card modal-box">
+            <h3 id="confirm-title">Confirm</h3>
+            <p id="confirm-msg">Are you sure?</p>
+            <div class="modal-actions">
+                <button id="btn-confirm-no" class="btn btn-text">No</button>
+                <button id="btn-confirm-yes" class="btn btn-primary">Yes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Retroactive Modal -->
+    <div id="retroactive-modal" class="modal-overlay hidden">
+        <div class="glass-card modal-box">
+            <h3>Log Past Period</h3>
+            <p>Select the start date of a missed period.</p>
+            <div class="input-group date-input-wrapper" style="margin-top: 1rem;">
+                <input type="date" id="retro-date-picker">
+            </div>
+            <div class="modal-actions">
+                <button id="btn-retro-cancel" class="btn btn-text">Cancel</button>
+                <button id="btn-retro-save" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Breathe Modal -->
+    <div id="breathe-modal" class="modal-overlay hidden">
+        <div class="breathe-container">
+            <button id="btn-close-breathe" class="btn-icon-circle white-icon">
+                <span class="material-icons-round">close</span>
+            </button>
+            
+            <h2 id="breathe-instruction">Inhale</h2>
+            
+            <div class="breathe-circle-outer">
+                <div class="breathe-circle"></div>
+            </div>
+            
+            <p>Focus on your breath.</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
