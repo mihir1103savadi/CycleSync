@@ -1,0 +1,12 @@
+[build]
+  # This tells Netlify that the website files are in the current directory
+  publish = "."
+  # No build command is needed since this is plain HTML/JS
+  command = ""
+
+# This part is crucial for Single Page Apps (SPA)
+# It ensures that if someone refreshes the page, they don't get a 404 error
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
